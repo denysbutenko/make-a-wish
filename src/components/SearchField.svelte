@@ -5,6 +5,8 @@
   export let handleSubmit;
   export let handleReset;
   export let loading = false;
+  export let placeholder = '';
+  export let lightTheme = false;
 
   const _handleKeydown = e => {
     if (e.target == ref && query && e.code == "Enter") {
@@ -14,7 +16,7 @@
 </script>
 
 <style lang="scss">
-  @import "../../styles/theme.scss";
+  @import "../styles/theme.scss";
   input {
     display: block;
     margin: 0;
@@ -26,6 +28,11 @@
     border-radius: 3px;
     border: 0;
     background: $graphite;
+
+    &.light {
+      color: $lightText;
+      background: $lightFill;
+    }
   }
   input + i {
     color: $mediumText;
@@ -54,6 +61,8 @@
 
 <input
   type="text"
+  class:light={lightTheme}
+  placeholder={placeholder}
   bind:this={ref}
   bind:value={query}
   on:keydown={_handleKeydown} />

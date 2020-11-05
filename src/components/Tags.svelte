@@ -66,7 +66,7 @@
     </li>
     {#if index == items.length - 1 && totalCount > items.length && handleMore}
       <li>
-        <Tag handleClick={handleMore}>...</Tag>
+        <Tag color="{color}" textColor="{textColor}" handleClick={handleMore}>...</Tag>
       </li>
     {/if}
   {/each}

@@ -26,6 +26,7 @@
     UserTile,
     PageFooter,
     ApplyForm,
+    MagicForm,
     Button,
     Dude
   } from "../components";
@@ -37,6 +38,7 @@
   let locationSummary;
   let experience;
   let showForm = false;
+  let isMagicForm = false;
   let showSuccess = false;
   let viewportHeight;
   let backLink;
@@ -48,10 +50,12 @@
   let nextJob;
   let _formLinkRef;
   let applyMessage = "";
+  let magicSpell = "";
   let _fullDescriptionRef;
   let _descriptionRef;
   let doMagic = false;
   let spell;
+  let _jobTitleRef;
 
   $: _submitWrapperTriggerHeight = _submitWrapperTriggerHeight
     ? _submitWrapperTriggerHeight
@@ -64,6 +68,11 @@
       translations,
       locale: lang
     });
+  }
+  $: {
+    if (showSuccess) {
+      setTimeout(() => (showSuccess = false), 5000);
+    }
   }
 
   const _formatMarkedInnerHtml = (text, element) => {
@@ -240,8 +249,23 @@
       color: $lightText;
     }
   }
-  .submit + .favorite-toggler-wrapper {
-    margin-left: 10px;
+
+  .toolbar {
+    .toolbar-item {
+      &:not(:first-child) {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .ridiculous-button {
+    background: $lightFill;
+    color: $lightText;
+
+    &:hover,
+    &:focus {
+      background: $lightestFill;
+    }
   }
 
   .job-teaser {
@@ -370,7 +394,7 @@
   </ul>
 
   <section class="summary-box">
-    <h1>{job.title}</h1>
+    <h1 bind:this={_jobTitleRef}>{job.title}</h1>
     {#if job.company && job.company.name}
       <h2>
         {lang && formatMessage('at')}
@@ -378,10 +402,12 @@
       </h2>
     {/if}
     <!-- SUCCESS MESSAGE-->
-    <p class="success-message" in:fly={{ y: 20, duration: 300, delay: 300 }}>
-      <i class="icon-ok" />
+    {#if showSuccess}
+    <p class="success-message" in:fly="{{ y: 20, duration: 300, delay: 300 }}">
+      <i class="icon-ok"></i>
       <span>{lang && formatMessage('Mischief Managed!')}</span>
     </p>
+    {/if}
     <!---->
     <ul class="summary">
       {#if job.language && job.language.name}
@@ -403,9 +429,9 @@
   </section>
 
   {#if !showForm}
-    <section class="submit-wrapper" bind:this={_submitWrapperRef}>
+    <section class="submit-wrapper toolbar" bind:this={_submitWrapperRef}>
       <button
-        class="submit"
+        class="submit toolbar-item"
         on:click={() => {
           showForm = true;
           const offset = _formLinkRef.offsetTop;
@@ -417,7 +443,7 @@
         }}>
         {lang && formatMessage('Apply')}
       </button>
-      <div class="favorite-toggler-wrapper">
+      <div class="favorite-toggler-wrapper toolbar-item">
         <span
           class:favorite={job.isFavorite}
           on:click={() => {
@@ -428,22 +454,56 @@
           {lang && formatMessage('Add to favorites')}
         </span>
       </div>
+      <button
+        class="ridiculous-button toolbar-item"
+        on:click="{() => {
+          showForm = true;
+          isMagicForm = true;
+          const offset = _formLinkRef.offsetTop;
+          window.scroll({
+            top: y > 50 ? offset - 100 : 0,
+            left: 0,
+            behavior: 'smooth',
+          });
+        }}">
+        {lang && formatMessage('Ridiculous')}
+      </button>
     </section>
   {/if}
   <span bind:this={_formLinkRef} />
   {#if showForm}
     <section class="form-wrapper">
-      <ApplyForm
-        bind:job
-        bind:message={applyMessage}
-        handleSuccess={() => {
-          spell = 'Expecto Patronum!';
-          doMagic = true;
-          showForm = false;
-        }}
-        handleDismiss={() => {
-          showForm = false;
-        }} />
+      {#if isMagicForm}
+        <MagicForm
+          bind:message="{magicSpell}"
+          handleSuccess="{() => {
+            showSuccess = true;
+            showForm = false;
+            isMagicForm = false;
+            magicSpell = "";
+            const offset = _jobTitleRef.offsetTop;
+            window.scroll({
+              top: offset,
+              left: 0,
+              behavior: 'smooth',
+            });
+          }}"
+          handleDismiss="{() => {
+            showForm = false;
+          }}" />
+      {:else}
+        <ApplyForm
+          bind:job
+          bind:message="{applyMessage}"
+          handleSuccess="{() => {
+            spell = 'Expecto Patronum!';
+            doMagic = true;
+            showForm = false;
+          }}"
+          handleDismiss="{() => {
+            showForm = false;
+          }}" />
+      {/if}
     </section>
   {/if}
 

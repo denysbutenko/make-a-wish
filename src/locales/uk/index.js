@@ -16,4 +16,7 @@ export default {
   "Set it": "Вкажіть",
   "in settings": "в налаштуваннях",
   "Mischief Managed!": "Витівка вдалася!",
+  Ridiculous: "Рідікулус",
+  Save: "Зберегти",
+  "ToS Agreement": "Урочисто присягаю, що затівати пустощі, і тільки пустощі!",
 };

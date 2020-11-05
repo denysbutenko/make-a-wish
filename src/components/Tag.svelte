@@ -8,7 +8,7 @@
 </script>
 
 <style lang="scss">
-  @import "../../styles/theme.scss";
+  @import "../styles/theme.scss";
   span {
     cursor: pointer;
     display: inline-block;

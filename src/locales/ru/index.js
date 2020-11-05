@@ -16,4 +16,8 @@ export default {
   "Set it": "Укажите",
   "in settings": "в настройках",
   "Mischief Managed!": "Шалость удалась",
+  Ridiculous: "Ридикулус",
+  Save: "Сохранить",
+  "ToS Agreement":
+    "Торжественно клянусь, что замышляю шалость, и только шалость!",
 };
